@@ -6,6 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "deploy": "gh-pages -d .output/public",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
@@ -16,5 +17,8 @@
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }
