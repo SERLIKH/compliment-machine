@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     ]
   },
   app: {
-    baseURL: '/compliment-machine/', // NAMA REPO GITHUB
+    baseURL: '/compliment-machine/',
   },
   nitro: {
     preset: 'github-pages'
