@@ -20,6 +20,12 @@
                 :style="{ bottom: '25%', left: '50%', transform: 'translateX(-50%)', width: '360px' }" />
         </div>
 
+        <button @click="toggleSound"
+            class="absolute top-6 right-6 bg-white/80 backdrop-blur px-4 py-2 rounded-full font-bold shadow hover:scale-105 transition">
+            {{ isSoundOn ? '🔊 Sound ON' : '🔇 Sound OFF' }}
+        </button>
+
+
         <!-- Main Content -->
         <div class="text-center space-y-7 max-w-2xl px-6 z-10">
             <h1 class="text-4xl md:text-5xl lg:text-7xl font-black text-blue-800">
@@ -49,6 +55,37 @@ import FloatingCharacter from '~/components/FloatingCharacter.vue'
 
 const name = ref('')
 const compliment = ref('')
+const isSoundOn = ref(false)
+
+let bgAudio
+let clickAudio
+let confetti
+
+onMounted(async () => {
+    // 🎶 Background music
+    bgAudio = new Audio('/sounds/bg-music.mp3')
+    bgAudio.loop = true
+    bgAudio.volume = 0.4
+
+    // 🔘 Click sound
+    clickAudio = new Audio('/sounds/click.mp3')
+    clickAudio.volume = 0.8
+
+    // 🎉 Confetti
+    confetti = (await import('canvas-confetti')).default
+})
+
+function toggleSound() {
+    isSoundOn.value = !isSoundOn.value
+
+    if (isSoundOn.value) {
+        bgAudio.currentTime = 0
+        bgAudio.play().catch(() => { })
+    } else {
+        bgAudio.pause()
+    }
+}
+
 
 const compliments = [
     "Asli, setiap ada {name}, suasana langsung jadi seru. Kayak ada energi tambahan gitu!",
@@ -102,13 +139,13 @@ const compliments = [
     "Dunia harus tahu kalau {name} itu kerennya nggak masuk akal!"
 ]
 
-let confetti
-
-onMounted(async () => {
-    confetti = (await import('canvas-confetti')).default
-})
 
 function generate() {
+    if (isSoundOn.value && clickAudio) {
+        clickAudio.currentTime = 0
+        clickAudio.play().catch(() => { })
+    }
+
     const random = Math.floor(Math.random() * compliments.length)
     const userName = name.value || 'Kamu'
     compliment.value = compliments[random].replace('{name}', userName)
